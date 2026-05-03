@@ -1,6 +1,6 @@
 import { StructuredToolInterface } from '@langchain/core/tools';
 import { createGetFinancials, createGetMarketData, createReadFilings, createScreenStocks } from './finance/index.js';
-import { exaSearch, perplexitySearch, tavilySearch, WEB_SEARCH_DESCRIPTION, xSearchTool, X_SEARCH_DESCRIPTION } from './search/index.js';
+import { braveSearch, exaSearch, perplexitySearch, tavilySearch, WEB_SEARCH_DESCRIPTION, xSearchTool, X_SEARCH_DESCRIPTION } from './search/index.js';
 import { skillTool, SKILL_TOOL_DESCRIPTION } from './skill.js';
 import { webFetchTool, WEB_FETCH_DESCRIPTION } from './fetch/web-fetch.js';
 import { browserTool, BROWSER_DESCRIPTION } from './browser/browser.js';
@@ -141,8 +141,17 @@ export function getToolRegistry(model: string): RegisteredTool[] {
     },
   ];
 
-  // Include web_search if Exa, Perplexity, or Tavily API key is configured (Exa → Perplexity → Tavily)
-  if (process.env.EXASEARCH_API_KEY) {
+  // Include web_search if Brave, Exa, Perplexity, or Tavily API key is configured
+  // (Brave → Exa → Perplexity → Tavily)
+  if (process.env.BRAVE_API_KEY) {
+    tools.push({
+      name: 'web_search',
+      tool: braveSearch,
+      description: WEB_SEARCH_DESCRIPTION,
+      compactDescription: 'Search the web for current information. Returns titles, URLs, and snippets.',
+      concurrencySafe: true,
+    });
+  } else if (process.env.EXASEARCH_API_KEY) {
     tools.push({
       name: 'web_search',
       tool: exaSearch,
