@@ -10,6 +10,7 @@ import {
   type Model,
 } from '../utils/model.js';
 import { getOllamaModels } from '../utils/ollama.js';
+import { getLlamaServerModels } from '../utils/llama-server.js';
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../model/llm.js';
 import { InMemoryChatHistory } from '../utils/in-memory-chat-history.js';
 
@@ -109,6 +110,14 @@ export class ModelSelectionController {
       return;
     }
 
+    if (providerId === 'llama') {
+      const llamaModelIds = await getLlamaServerModels();
+      this.pendingModelsValue = llamaModelIds.map((id) => ({ id, displayName: id }));
+      this.appStateValue = 'model_select';
+      this.emitChange();
+      return;
+    }
+
     this.pendingModelsValue = getModelsForProvider(providerId);
     this.appStateValue = 'model_select';
     this.emitChange();
@@ -126,6 +135,11 @@ export class ModelSelectionController {
 
     if (this.pendingProviderValue === 'ollama') {
       this.completeModelSwitch(this.pendingProviderValue, `ollama:${modelId}`);
+      return;
+    }
+
+    if (this.pendingProviderValue === 'llama') {
+      this.completeModelSwitch(this.pendingProviderValue, `llama:${modelId}`);
       return;
     }
 

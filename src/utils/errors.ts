@@ -240,9 +240,15 @@ export function formatUserFacingError(raw: string, provider?: string): string {
     case 'billing':
       return `${providerLabel}API key has run out of credits or has an insufficient balance. ` +
         'Check your billing dashboard and top up, or switch to a different API key.';
-    case 'auth':
+    case 'auth': {
+      if (provider === 'llama-server') {
+        return 'llama-server rejected the request (authentication error). ' +
+          'If your server requires an API key, set LLAMA_SERVER_API_KEY in your .env. ' +
+          `Otherwise, check that the server is reachable at ${process.env.LLAMA_SERVER_URL || 'http://192.168.50.42:8080/v1'}.`;
+      }
       return `${providerLabel}API key is invalid or expired. ` +
         'Check that your API key is correct in your environment variables.';
+    }
     case 'timeout':
       return 'LLM request timed out. Please try again.';
     case 'overloaded':

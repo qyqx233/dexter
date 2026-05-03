@@ -132,6 +132,15 @@ const MODEL_FACTORIES: Record<string, ModelFactory> = {
       ...opts,
       ...(process.env.OLLAMA_BASE_URL ? { baseUrl: process.env.OLLAMA_BASE_URL } : {}),
     }),
+  llama: (name, opts) =>
+    new ChatOpenAI({
+      model: name.replace(/^llama:/, ''),
+      ...opts,
+      apiKey: process.env.LLAMA_SERVER_API_KEY || 'sk-no-key-required',
+      configuration: {
+        baseURL: process.env.LLAMA_SERVER_URL || 'http://192.168.50.42:8080/v1',
+      },
+    }),
 };
 
 const DEFAULT_FACTORY: ModelFactory = (name, opts) =>

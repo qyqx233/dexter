@@ -81,6 +81,12 @@ export const PROVIDERS: ProviderDef[] = [
     modelPrefix: 'ollama:',
     contextWindow: 128_000,
   },
+  {
+    id: 'llama',
+    displayName: 'llama-server',
+    modelPrefix: 'llama:',
+    contextWindow: 128_000,
+  },
 ];
 
 const defaultProvider = PROVIDERS.find((p) => p.id === 'openai')!;

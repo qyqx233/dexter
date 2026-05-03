@@ -29,6 +29,11 @@ class EmptyModelSelector extends Container {
         new Text(theme.muted('Make sure Ollama is running and you have models downloaded.'), 0, 0),
       );
     }
+    if (providerId === 'llama') {
+      this.addChild(
+        new Text(theme.muted('Make sure llama-server is running and accessible.'), 0, 0),
+      );
+    }
     this.addChild(new Text(theme.muted('esc to go back'), 0, 0));
   }
 
